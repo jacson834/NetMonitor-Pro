@@ -1,0 +1,54 @@
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #121212;
+  color: #ffffff;
+}
+
+.app-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 250px;
+  background-color: #1e1e1e;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar a {
+  color: #bbbbbb;
+  text-decoration: none;
+  margin: 10px 0;
+  font-size: 1.1em;
+}
+
+.sidebar a:hover {
+  color: #ffffff;
+}
+
+.content {
+  flex-grow: 1;
+  padding: 20px;
+}
+
+.cards {
+  display: flex;
+  gap: 20px;
+}
+
+.card {
+  background-color: #1e1e1e;
+  padding: 20px;
+  border-radius: 8px;
+  min-width: 200px;
+  text-align: center;
+}
+
+.val {
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #00ff00;
+}
