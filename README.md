@@ -1,6 +1,17 @@
 # 🌐 NetMonitor Pro
 
+![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
+![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)
+![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
+![Vite](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white)
+![SQLite](https://img.shields.io/badge/sqlite-%2307405e.svg?style=for-the-badge&logo=sqlite&logoColor=white)
+![PyQt6](https://img.shields.io/badge/PyQt6-41CD52?style=for-the-badge&logo=qt&logoColor=white)
+
 NetMonitor Pro é uma aplicação fullstack completa para monitoramento de tráfego de rede (upload/download) em tempo real. O sistema conta com uma API robusta, um Dashboard Web moderno e um Widget de Desktop flutuante.
+
+## 📸 Preview
+
+![Screenshot do Dashboard](assets/dashboard.png)
 
 ## ✨ Funcionalidades
 
@@ -35,7 +46,7 @@ Certifique-se de ter o Python 3.9+ instalado. Na raiz do projeto, execute:
 ```bash
 python -m venv venv
 venv\Scripts\activate
-pip install fastapi uvicorn sqlalchemy psutil websockets PyQt6 requests pyinstaller
+pip install -r requirements.txt
 ```
 
 ### 2. Preparando o Ambiente Frontend
