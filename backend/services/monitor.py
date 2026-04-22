@@ -30,7 +30,8 @@ class NetworkMonitorService:
             
         self.interval = self.config.get("update_interval", 1)
         self.limit_mbps = self.config.get("alert_limit_mbps", 5.0)
-        self.old_data = psutil.net_io_counters()
+        self.interface = self.config.get("interface", "all")
+        self.old_data = self._get_net_data()
         self.active_connections = []
         self.current_stats = {"upload": 0.0, "download": 0.0}
 
@@ -51,10 +52,20 @@ class NetworkMonitorService:
     def _bytes_to_mb(self, bytes_val):
         return bytes_val / (1024 * 1024)
 
+    def _get_net_data(self):
+        if self.interface == "all" or not self.interface:
+            return psutil.net_io_counters()
+            
+        pernic_data = psutil.net_io_counters(pernic=True)
+        if self.interface in pernic_data:
+            return pernic_data[self.interface]
+        else:
+            return psutil.net_io_counters() # Fallback seguro se a interface não existir
+
     async def start_monitoring(self):
         db_counter = 0
         while True:
-            new_data = psutil.net_io_counters()
+            new_data = self._get_net_data()
             
             # Calcula diferença por segundo
             up_bytes = new_data.bytes_sent - self.old_data.bytes_sent
@@ -70,7 +81,11 @@ class NetworkMonitorService:
                 logging.warning(f"Limite excedido! UP: {self.current_stats['upload']:.2f} MB/s | DOWN: {self.current_stats['download']:.2f} MB/s")
 
             # Broadcast WS
-            await self.broadcast({"timestamp": datetime.now().isoformat(), "stats": self.current_stats})
+            await self.broadcast({
+                "timestamp": datetime.now().isoformat(), 
+                "stats": self.current_stats,
+                "interface": self.interface
+            })
 
             # Salva no DB a cada 10 interações (ex: 10 seg) para evitar sobrecarga no histórico
             db_counter += 1

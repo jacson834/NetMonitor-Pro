@@ -1,6 +1,7 @@
 import sys
 import requests
-from PyQt6.QtWidgets import QApplication, QLabel, QWidget, QVBoxLayout
+import webbrowser
+from PyQt6.QtWidgets import QApplication, QLabel, QWidget, QVBoxLayout, QPushButton
 from PyQt6.QtCore import Qt, QTimer, QPoint
 from PyQt6.QtGui import QFont, QColor
 
@@ -18,6 +19,14 @@ class NetworkWidget(QWidget):
         self.label.setFont(QFont("Segoe UI", 12, QFont.Weight.Bold))
         self.label.setStyleSheet("color: #00FF00; background-color: rgba(0, 0, 0, 150); padding: 10px; border-radius: 8px;")
         layout.addWidget(self.label)
+        
+        # Botão para abrir o Dashboard Web
+        self.btn_dash = QPushButton("🌐 Abrir Dashboard")
+        self.btn_dash.setStyleSheet("color: #FFFFFF; background-color: rgba(50, 50, 50, 150); padding: 5px; border-radius: 5px; border: 1px solid #555; font-weight: bold;")
+        self.btn_dash.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.btn_dash.clicked.connect(self.open_dashboard)
+        layout.addWidget(self.btn_dash)
+        
         self.setLayout(layout)
         
         # Update Timer
@@ -40,6 +49,10 @@ class NetworkWidget(QWidget):
                 self.label.setText(text)
         except Exception as e:
             self.label.setText("API Offline")
+
+    def open_dashboard(self):
+        # Abre o endereço padrão do Vite no navegador
+        webbrowser.open("http://localhost:5173")
 
     # Métodos para arrastar a janela sem borda
     def mousePressEvent(self, event):

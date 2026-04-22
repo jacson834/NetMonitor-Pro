@@ -15,10 +15,11 @@ NetMonitor Pro é uma aplicação fullstack completa para monitoramento de tráf
 
 ## ✨ Funcionalidades
 
-- **Dashboard Web (React):** Gráficos em tempo real, painel de configurações dinâmico e alertas visuais.
-- **Widget Desktop (PyQt6):** Janela flutuante minimalista, transparente e arrastável. Clique com o botão direito para travar/destravar na tela.
-- **Backend API (FastAPI):** Coleta de métricas via `psutil`, comunicação via WebSocket para tempo real e REST API para dados históricos.
+- **Dashboard Web (React):** Gráficos em tempo real, painel de configurações dinâmico, alertas visuais e seleção de placa de rede (Wi-Fi/Ethernet) em tempo real.
+- **Widget Desktop (PyQt6):** Janela flutuante minimalista, transparente e arrastável. Possui trava de posição (botão direito) e atalho rápido para abrir o painel web.
+- **Backend API (FastAPI):** Coleta de métricas específicas por interface via `psutil`, comunicação via WebSocket para tempo real e REST API para dados históricos.
 - **Banco de Dados (SQLite):** Armazenamento de histórico de consumo de rede utilizando SQLAlchemy.
+- **Inicialização Silenciosa:** Scripts nativos `.vbs` configurados para iniciar o sistema em segundo plano junto com o Windows.
 
 ## 🛠️ Tecnologias Utilizadas
 
@@ -65,6 +66,12 @@ Abra terminais separados na raiz do projeto e execute:
 - **Para iniciar a API (Backend):** `python start_backend.py`
 - **Para iniciar o Widget Desktop:** `python start_widget.py`
 - **Para iniciar o Dashboard Web:** Vá para a pasta `frontend/` e rode `npm run dev`
+
+### 4. Inicialização Automática com o Windows (Oculto)
+
+Para rodar o sistema em segundo plano (sem janelas de terminal preta) ao ligar o PC:
+1. Pressione `Windows + R`, digite `shell:startup` e dê Enter.
+2. Crie atalhos dos arquivos `iniciar_backend_oculto.vbs` e `iniciar_widget_oculto.vbs` da raiz do projeto e cole dentro desta pasta de inicialização.
 
 ## 📦 Gerando Executáveis (Windows)
 

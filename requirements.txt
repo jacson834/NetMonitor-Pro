@@ -1,0 +1,9 @@
+fastapi
+pydantic
+uvicorn
+sqlalchemy
+psutil
+websockets
+PyQt6
+requests
+pyinstaller

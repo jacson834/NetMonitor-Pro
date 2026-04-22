@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import { Line } from 'react-chartjs-2';
 import 'chart.js/auto';
 
@@ -6,6 +7,9 @@ const Dashboard = () => {
   const [liveData, setLiveData] = useState({ upload: 0, download: 0 });
   const [alertLimit, setAlertLimit] = useState(5.0);
   const [chartPoints, setChartPoints] = useState(20);
+  const [interfaceName, setInterfaceName] = useState('...');
+  const [rawInterface, setRawInterface] = useState('all');
+  const [availableInterfaces, setAvailableInterfaces] = useState([]);
 
   const [chartData, setChartData] = useState({
     labels: [],
@@ -16,6 +20,11 @@ const Dashboard = () => {
   });
 
   useEffect(() => {
+    // Busca as interfaces de rede disponíveis ao carregar a página
+    axios.get('http://localhost:8000/api/interfaces')
+      .then(res => setAvailableInterfaces(res.data.interfaces))
+      .catch(err => console.error("Erro ao buscar interfaces:", err));
+
     const ws = new WebSocket('ws://localhost:8000/api/ws');
     
     ws.onmessage = (event) => {
@@ -23,6 +32,11 @@ const Dashboard = () => {
       const { upload, download } = data.stats;
       
       setLiveData({ upload, download });
+      
+      if (data.interface) {
+        setRawInterface(data.interface); // Sincroniza o 'select' com o backend
+        setInterfaceName(data.interface === 'all' ? 'Todas as Redes' : data.interface);
+      }
       
       setChartData(prev => {
         // Mantém até 100 pontos na memória para permitir o ajuste visual
@@ -48,14 +62,34 @@ const Dashboard = () => {
     datasets: chartData.datasets.map(ds => ({ ...ds, data: ds.data.slice(-chartPoints) }))
   };
 
+  const handleInterfaceChange = (e) => {
+    const newIface = e.target.value;
+    axios.post('http://localhost:8000/api/interface', { interface: newIface }).catch(console.error);
+  };
+
   const isUpAlert = liveData.upload > alertLimit;
   const isDownAlert = liveData.download > alertLimit;
 
   return (
     <div>
-      <h1>Monitoramento em Tempo Real</h1>
+      <h1>
+        Monitoramento em Tempo Real
+        <span style={{ fontSize: '0.5em', color: '#888', marginLeft: '10px', fontWeight: 'normal' }}>
+          ({interfaceName})
+        </span>
+      </h1>
       
       <div className="settings-panel" style={{ background: '#1e1e1e', padding: '15px', borderRadius: '8px', marginBottom: '20px', display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+        <div>
+          <label style={{ marginRight: '10px' }}>Rede: </label>
+          <select value={rawInterface} onChange={handleInterfaceChange} style={{ background: '#333', color: '#fff', border: '1px solid #444', padding: '5px', borderRadius: '4px' }}>
+            {availableInterfaces.map(iface => (
+              <option key={iface} value={iface}>
+                {iface === 'all' ? 'Todas as Redes' : iface}
+              </option>
+            ))}
+          </select>
+        </div>
         <div>
           <label style={{ marginRight: '10px' }}>Alerta Visual (MB/s): </label>
           <input type="number" value={alertLimit} onChange={(e) => setAlertLimit(Number(e.target.value))} style={{ width: '80px', background: '#333', color: '#fff', border: '1px solid #444', padding: '5px', borderRadius: '4px' }} />
